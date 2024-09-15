@@ -5,9 +5,9 @@ import { useLocation } from "react-router-dom";
 const SingleMovieDetailPage = () => {
   const location = useLocation();
 
-  // // Extract the movie name from the query parameter
-  // const queryParams = new URLSearchParams(location.search);
-  // const movie_name = queryParams.get("name");
+  // Extract the movie name from the query parameter
+  const queryParams = new URLSearchParams(location.search);
+  const movie_name = queryParams.get("name");
 
   const [movie_id, setMovieId] = useState(null);
   const [movieDetails, setMovieDetails] = useState(null);

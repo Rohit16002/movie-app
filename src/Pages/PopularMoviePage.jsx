@@ -1,23 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { URL, IMAGE_URL } from "../utils/constant";
 import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-
-
 
 const PopularMoviePage = () => {
-  const location = useLocation();
   const [movies, setMovies] = useState([]);
   const [page, setPage] = useState(1); // State for current page
   const [totalPages, setTotalPages] = useState(1); // State for total pages
   const navigate = useNavigate();
-
-  // Get Movie name from Navbar
-  const queryParams = new URLSearchParams(location.search);
-  const movie_name = queryParams.get("name");
-  
-  
-
 
   useEffect(() => {
     const fetchApiData = async () => {
@@ -30,7 +19,7 @@ const PopularMoviePage = () => {
         console.error("Error fetching data:", error);
       }
     };
-    
+
     fetchApiData();
   }, [page]); // Re-fetch data when the page changes
 
