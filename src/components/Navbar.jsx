@@ -17,7 +17,7 @@ const Navbar = () => {
   const handleSearchClick = () => {
     if (searchQuery.trim()) {
       navigate(
-        `/SingleMovieDetailPage?name=${encodeURIComponent(searchQuery)}`
+        `/?name=${encodeURIComponent(searchQuery)}`
       );
       setSearchQuery("");
     }
