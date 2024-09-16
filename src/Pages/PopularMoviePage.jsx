@@ -6,6 +6,8 @@ const PopularMoviePage = () => {
   const [movies, setMovies] = useState([]);
   const [page, setPage] = useState(1); // State for current page
   const [totalPages, setTotalPages] = useState(1); // State for total pages
+  const [searchPage, setSearchPage] = useState(1); // State for current search page
+  const [searchTotalPages, setSearchTotalPages] = useState(1); // State for total search pages
   const [loading, setLoading] = useState(false); // Loading state
   const [error, setError] = useState(""); // Error state
 
@@ -26,7 +28,7 @@ const PopularMoviePage = () => {
         // Check if there's a search query, fetch based on that, otherwise fetch popular movies
         if (movie_name) {
           apiResp = await fetch(
-            `https://api.themoviedb.org/3/search/movie?api_key=c45a857c193f6302f2b5061c3b85e743&query=${movie_name}`
+            `https://api.themoviedb.org/3/search/movie?api_key=c45a857c193f6302f2b5061c3b85e743&query=${movie_name}&page=${searchPage}`
           );
         } else {
           apiResp = await fetch(`${URL}&page=${page}`); // Fetch data for the current page
@@ -35,8 +37,13 @@ const PopularMoviePage = () => {
         const resp = await apiResp.json();
 
         if (resp.results.length > 0) {
-          setMovies(resp.results);
-          setTotalPages(resp.total_pages); // Update total pages from the API response
+          if (movie_name) {
+            setMovies(resp.results);
+            setSearchTotalPages(resp.total_pages); // Update total pages from the API response
+          } else {
+            setMovies(resp.results);
+            setTotalPages(resp.total_pages); // Update total pages from the API response
+          }
         } else {
           setError("No movies found");
         }
@@ -49,21 +56,33 @@ const PopularMoviePage = () => {
     };
 
     fetchApiData();
-  }, [page, movie_name]); // Re-fetch data when the page or search query changes
+  }, [page, searchPage, movie_name]); // Re-fetch data when the page, search page, or search query changes
 
   const handleMovieClick = (movie) => {
     navigate(`/SingleMovieDetailPage?name=${encodeURIComponent(movie.title)}`);
   };
 
   const handleNextPage = () => {
-    if (page < totalPages) {
-      setPage(page + 1); // Move to the next page
+    if (movie_name) {
+      if (searchPage < searchTotalPages) {
+        setSearchPage(searchPage + 1); // Move to the next page for search results
+      }
+    } else {
+      if (page < totalPages) {
+        setPage(page + 1); // Move to the next page for popular movies
+      }
     }
   };
 
   const handlePreviousPage = () => {
-    if (page > 1) {
-      setPage(page - 1); // Move to the previous page
+    if (movie_name) {
+      if (searchPage > 1) {
+        setSearchPage(searchPage - 1); // Move to the previous page for search results
+      }
+    } else {
+      if (page > 1) {
+        setPage(page - 1); // Move to the previous page for popular movies
+      }
     }
   };
 
@@ -83,9 +102,12 @@ const PopularMoviePage = () => {
                   className="w-48 relative group cursor-pointer"
                   onClick={() => handleMovieClick(movie)}
                 >
-                 
                   <img
-                    src={movie.poster_path ? `${IMAGE_URL}${movie.poster_path}` : "https://via.placeholder.com/500x750/00000/FFFFFF?text=%20%20%20%20%20Poster%0ANot%20Available&size=100"} // "https://shorturl.at/m1nNR"
+                    src={
+                      movie.poster_path
+                        ? `${IMAGE_URL}${movie.poster_path}`
+                        : "https://via.placeholder.com/500x750/00000/FFFFFF?text=%20%20%20%20%20Poster%0ANot%20Available&size=100"
+                    }
                     alt={movie.title}
                     className="w-full rounded-lg transition-transform transform group-hover:scale-105 duration-300"
                   />
@@ -101,27 +123,30 @@ const PopularMoviePage = () => {
             )}
           </div>
 
-          {!movie_name && ( // Hide pagination if search query is present
-            <div className="flex justify-center items-center mt-6">
-              <button
-                className="bg-gray-700 text-white px-3 py-1 rounded mr-2"
-                disabled={page === 1}
-                onClick={handlePreviousPage}
-              >
-                Previous
-              </button>
-              <span className="text-white">
-                Page {page} of {totalPages}
-              </span>
-              <button
-                className="bg-gray-700 text-white px-3 py-1 rounded ml-2"
-                disabled={page === totalPages}
-                onClick={handleNextPage}
-              >
-                Next
-              </button>
-            </div>
-          )}
+          <div className="flex justify-center items-center mt-6">
+            <button
+              className="bg-gray-700 text-white px-3 py-1 rounded mr-2"
+              disabled={movie_name ? searchPage === 1 : page === 1}
+              onClick={handlePreviousPage}
+            >
+              Previous
+            </button>
+            <span className="text-white">
+              Page {movie_name ? searchPage : page} of{" "}
+              {movie_name ? searchTotalPages : totalPages}
+            </span>
+            <button
+              className="bg-gray-700 text-white px-3 py-1 rounded ml-2"
+              disabled={
+                movie_name
+                  ? searchPage === searchTotalPages
+                  : page === totalPages
+              }
+              onClick={handleNextPage}
+            >
+              Next
+            </button>
+          </div>
         </>
       )}
     </div>
