@@ -4,7 +4,7 @@ This is a movie web application built with Vite and Tailwind CSS. The applicatio
 Features
 
 ## Live Demo
-You can check out the live version of the project [click here](https://movie-7x2vrz7le-rohits-projects-16f689f5.vercel.app).
+You can check out the live version of the project [click here](https://movie-app-by-rohit.vercel.app/).
 
 ## Technologies Used
 - React
