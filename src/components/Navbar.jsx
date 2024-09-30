@@ -16,9 +16,7 @@ const Navbar = () => {
   // Handle search button click
   const handleSearchClick = () => {
     if (searchQuery.trim()) {
-      navigate(
-        `/?name=${encodeURIComponent(searchQuery)}`
-      );
+      navigate(`/?name=${encodeURIComponent(searchQuery)}`);
       setSearchQuery("");
     }
   };
@@ -37,9 +35,9 @@ const Navbar = () => {
 
   return (
     <div className="flex h-14 items-center justify-around bg-navColor text-txtColor">
-      <div className="right font-bold text-white">
+      <div className="right font-bold text-white sm:text-lg">
         <Link to="/">
-          <h3 className="hover:text-red-500">MovieDb</h3>
+          <h5>MovieDb</h5>
         </Link>
       </div>
       <div className="left flex items-center">
@@ -61,9 +59,26 @@ const Navbar = () => {
           </li>
         </ul>
 
+        <div className="ml-4 mr-1 flex items-center">
+          <input
+            className="focus:outline-none p-1 rounded text-gray-700 w-36 mr-1 sm:w-52 sm:mr-2 "
+            type="text"
+            placeholder="Movie Name"
+            value={searchQuery}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+          />
+          <button
+            className="ml-2 px-1 py-1 bg-btnColor text-white rounded hover:text-red-500 sm:px-3"
+            onClick={handleSearchClick}
+          >
+            Search
+          </button>
+        </div>
+
         <div className="sm:hidden">
           <FaBars
-            className="text-white text-2xl cursor-pointer hover:text-red-500"
+            className="text-white text-2xl cursor-pointer ml-2 ${isMenuOpen ? 'text-red-500' : 'hover:text-red-500'}"
             onClick={toggleMenu}
           />
         </div>
@@ -97,23 +112,6 @@ const Navbar = () => {
             </ul>
           </div>
         )}
-
-        <div className="ml-4 flex items-center">
-          <input
-            className="focus:outline-none p-1 rounded text-gray-700"
-            type="text"
-            placeholder="Movie Name"
-            value={searchQuery}
-            onChange={handleInputChange}
-            onKeyDown={handleKeyDown}
-          />
-          <button
-            className="ml-2 px-3 py-1 bg-btnColor text-white rounded hover:text-red-500"
-            onClick={handleSearchClick}
-          >
-            Search
-          </button>
-        </div>
       </div>
     </div>
   );

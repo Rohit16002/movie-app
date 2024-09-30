@@ -81,11 +81,11 @@ const SingleMovieDetailPage = () => {
     fetchCastDetails();
   }, [movie_id]);
 
-  if (loading) return <div className="text-center text-lg">Loading...</div>;
+  if (loading) return <div className="text-center bg-bgColor text-white text-lg h-screen">Loading...</div>;
   if (error) return <div className="text-center text-lg">{error}</div>;
 
   return (
-    <div className="w-full min-h-screen bg-bgColor text-white px-8 py-5">
+    <div className="w-full min-h-screen bg-bgColor text-white px-2 py-5">
       {/* Movie Details Section */}
       {movieDetails && (
         <div className="max-w-7xl mx-auto rounded-lg shadow-lg p-3 mb-6">

@@ -4,10 +4,10 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 const PopularMoviePage = () => {
   const [movies, setMovies] = useState([]);
-  const [page, setPage] = useState(1); // State for current page
-  const [totalPages, setTotalPages] = useState(1); // State for total pages
-  const [searchPage, setSearchPage] = useState(1); // State for current search page
-  const [searchTotalPages, setSearchTotalPages] = useState(1); // State for total search pages
+  const [page, setPage] = useState(1); // State for popular movie page
+  const [totalPages, setTotalPages] = useState(1); // State for total popular movie pages
+  const [searchPage, setSearchPage] = useState(1); // State for search result page
+  const [searchTotalPages, setSearchTotalPages] = useState(1); // State for total search result pages
   const [loading, setLoading] = useState(false); // Loading state
   const [error, setError] = useState(""); // Error state
 
@@ -22,6 +22,7 @@ const PopularMoviePage = () => {
     const fetchApiData = async () => {
       setLoading(true);
       setError("");
+
       try {
         let apiResp;
 
@@ -31,7 +32,7 @@ const PopularMoviePage = () => {
             `https://api.themoviedb.org/3/search/movie?api_key=c45a857c193f6302f2b5061c3b85e743&query=${movie_name}&page=${searchPage}`
           );
         } else {
-          apiResp = await fetch(`${URL}&page=${page}`); // Fetch data for the current page
+          apiResp = await fetch(`${URL}&page=${page}`); // Fetch popular movies
         }
 
         const resp = await apiResp.json();
@@ -39,10 +40,10 @@ const PopularMoviePage = () => {
         if (resp.results.length > 0) {
           if (movie_name) {
             setMovies(resp.results);
-            setSearchTotalPages(resp.total_pages); // Update total pages from the API response
+            setSearchTotalPages(resp.total_pages); // Set total search pages
           } else {
             setMovies(resp.results);
-            setTotalPages(resp.total_pages); // Update total pages from the API response
+            setTotalPages(resp.total_pages); // Set total popular movie pages
           }
         } else {
           setError("No movies found");
@@ -56,7 +57,12 @@ const PopularMoviePage = () => {
     };
 
     fetchApiData();
-  }, [page, searchPage, movie_name]); // Re-fetch data when the page, search page, or search query changes
+  }, [movie_name, page, searchPage]); // Fetch data when movie_name, page, or searchPage changes
+
+  // Reset search page to 1 if movie_name changes
+  useEffect(() => {
+    setSearchPage(1);
+  }, [movie_name]);
 
   const handleMovieClick = (movie) => {
     navigate(`/SingleMovieDetailPage?name=${encodeURIComponent(movie.title)}`);
@@ -119,7 +125,9 @@ const PopularMoviePage = () => {
                 </div>
               ))
             ) : (
-              <p className="h-screen text-center text-white">No movies found</p>
+              <p className="h-screen text-center text-white">
+                No movies found!
+              </p>
             )}
           </div>
 
